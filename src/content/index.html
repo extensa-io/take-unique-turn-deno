@@ -17,11 +17,11 @@
     <a id="qr-link" target="_blank">or click here</a>
 </div>
 
-<script src="https://take-unique-turn-deno/jquery-3.7.1.min.js"
+<script src="https://code.jquery.com/jquery-3.7.1.min.js"
         integrity="sha256-/JqT3SQfawRcv/BIHPThkBvs0OEvtFFmqPF/lYI/Cxo="
         crossorigin="anonymous">
 </script>
-<script type="text/javascript" src="qrcode.min.js"></script>
+<script type="text/javascript" src="https://take-unique-turn-deno.onrender.com/qrcode.min.js"></script>
 <script>
 
     const qrcode = new QRCode(document.getElementById("qrcode"), {
@@ -29,7 +29,7 @@
         height : 500
     });
     const localhost = window.location.host;
-    const ws = new WebSocket(`ws://${localhost}/wss`);
+    const ws = new WebSocket(`wss://${localhost}/wss`);
     ws.onmessage = (m) => {
         const message = JSON.parse(m.data);
         console.log("Got message from server: ", message);
