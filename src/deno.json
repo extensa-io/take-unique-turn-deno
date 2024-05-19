@@ -1,0 +1,11 @@
+{
+  "tasks": {
+    "dev": "deno run -A --watch components/servers/HttpServer.ts",
+    "start": "deno run --allow-net --allow-read --allow-env ./components/servers/HttpServer.ts"
+  },  
+  "lint": {
+    "rules": {
+      "exclude": ["no-explicit-any", "no-unused-vars"]
+    }
+  }
+}

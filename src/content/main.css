@@ -1,0 +1,81 @@
+/* Basic styles */
+body {
+    margin: 0;
+    padding: 0;
+    font-family: sans-serif;
+    display: flex;
+    flex-direction: column;
+    min-height: 100vh;
+    font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial, sans-serif;
+}
+
+/* Header */
+header {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    padding: 3rem;
+    background-color: #ddd;
+}
+
+h1 {
+    margin: 0;
+}
+
+/* QR Code Container */
+#qr-container {
+    flex: 1;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+}
+
+#qr-code {
+    width:500px;
+    height:500px;
+}
+
+#div-link {
+    padding: 0.25rem;
+    position: fixed;
+    bottom: 0;
+    left: 0;
+    right: 0;
+    display: flex;
+    height: 3rem;
+}
+
+#qr-link {
+    flex: 1;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+}
+
+#user-form {
+    margin: 1rem;
+    display: flex;
+    flex-direction: column;
+}
+
+#user_name {
+    font-size: 2rem;
+    padding: 0.5rem 1rem;
+    border: 1px solid #ccc;
+    border-radius: 4px;
+}
+
+#assign-turn-button {
+    font-size: 2rem;
+    padding: 0.5rem 1rem;
+    margin-top: 1rem;
+    border: none;
+    border-radius: 4px;
+    cursor: pointer;
+    align-self: flex-start;
+}
+
+#big-number{
+    font-size: 20rem;
+    font-weight: bold;
+}

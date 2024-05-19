@@ -1,0 +1,42 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width,initial-scale=1.0">
+    <title>Scan to reserve your turn</title>
+    <link rel="stylesheet" type="text/css" href="https://take-unique-turn.onrender.com/main.css">
+</head>
+<body>
+<header>
+    <h1>Scan to enter your info and get the next available turn</h1>
+</header>
+<div id="qr-container">
+    <div id="qrcode"></div>
+</div>
+<div id="div-link">
+    <a id="qr-link" target="_blank">or click here</a>
+</div>
+
+<script src="https://cdn.socket.io/4.7.5/socket.io.min.js"></script>
+<script src="https://code.jquery.com/jquery-3.7.1.min.js"
+        integrity="sha256-/JqT3SQfawRcv/BIHPThkBvs0OEvtFFmqPF/lYI/Cxo="
+        crossorigin="anonymous">
+</script>
+<script type="text/javascript" src="qrcode.min.js"></script>
+<script>
+
+    const qrcode = new QRCode(document.getElementById("qrcode"), {
+        width : 500,
+        height : 500
+    });
+    const localhost = window.location.host;
+    const ws = new WebSocket(`ws://${localhost}/wss`);
+    ws.onmessage = (m) => {
+        const message = JSON.parse(m.data);
+        console.log("Got message from server: ", message);
+        qrcode.makeCode(message.server_url + "assign/" + message.next_available_turn);
+        document.getElementById("qr-link").href = message.server_url + "getTurn/" + message.next_available_turn;
+    };
+</script>
+</body>
+</html>

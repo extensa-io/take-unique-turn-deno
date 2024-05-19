@@ -1,0 +1,29 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title id="title">Thank You</title>
+    <link rel="stylesheet" type="text/css" href="https://take-unique-turn.onrender.com/main.css">
+</head>
+<body>
+<header>
+    <h1>Thank you <span id="name-in-header"></span>, your turn is</h1>
+</header>
+<div id="qr-container">
+    <div id="big-number"></div>
+</div>
+<script>
+    const nameParameter = /[&?]name=([^&]+)/.exec(location.search);
+    if (nameParameter) {
+        document.getElementById('title').text = "Thank you " + nameParameter[1];
+        document.getElementById('name-in-header').innerHTML = nameParameter[1];
+    }
+
+    const turnParameter = /[&?]turn=([^&]+)/.exec(location.search);
+    if (turnParameter) {
+        document.getElementById("big-number").innerHTML = turnParameter[1];
+    }
+</script>
+</body>
+</html>

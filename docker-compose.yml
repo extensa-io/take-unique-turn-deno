@@ -1,0 +1,24 @@
+services:
+  take-unique-turn:
+    container_name: server-deno
+    build:
+      dockerfile: src/Dockerfile
+      context: .
+    ports:
+      - "2490:8000"
+    tty: true
+    volumes:
+      - ./src:/src
+    env_file: local_env/.env
+    stop_grace_period: 1s
+    networks:
+      - shared
+
+volumes:
+  node_modules:
+
+networks:
+  shared:
+    name: shared
+    external:
+      true
