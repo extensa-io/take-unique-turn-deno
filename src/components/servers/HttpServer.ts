@@ -10,7 +10,7 @@ const service = new TurnService();
 
 // server
 const port =  Number(env["PORT"]) || 8000;
-const serverURL = env["SERVER_URL"] || '/';
+const serverURL = env["SERVER_URL"] || 'https://take-unique-turn-deno.onrender.com';
 
 const app = new Application({ logErrors: false });
 const router = new Router();
@@ -30,9 +30,7 @@ router.get("/wss", (ctx) => {
 
     const message = buildMessage();
     ws.send(JSON.stringify(message));
-    console.log("Connected to client");
   };
-  ws.onclose = () => console.log("Disconncted from client");
 });
 
 // routes
@@ -106,7 +104,7 @@ app.use(async (context, next) => {
 });
 
 app.addEventListener("listen", ({ port }) => {
-  console.log(`Server running on ${port}`);
+  console.log(`Server running on ${serverURL}:${port}`);
 });
 
 await app.listen({ port });
