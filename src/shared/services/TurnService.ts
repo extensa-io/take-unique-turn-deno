@@ -10,11 +10,6 @@ export class TurnService {
   public nextAvailableTurn: string = '';
 
   public assignTurn(id: string, userName: string): number {
-    if(!this.turns[id]) {
-      console.log('foo')
-      return 0;
-    }
-    
     if (!this.turns[id].assigned) {
       this.turns[id].user_name = userName;
       this.turns[id].assigned = true;
