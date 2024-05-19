@@ -10,7 +10,7 @@ const service = new TurnService();
 
 // server
 const port =  Number(env["PORT"]) || 8000;
-const serverURL = env["SERVER_URL"] || '/';
+const serverURL = env["SERVER_URL"] || 'https://take-unique-turn-deno.onrender.com/';
 
 const app = new Application({ logErrors: false });
 const router = new Router();
