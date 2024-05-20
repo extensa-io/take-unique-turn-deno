@@ -8,9 +8,17 @@ const env = await load();
 
 const service = new TurnService();
 
-// server
+// env variables
 const port =  Number(env["PORT"]) || 8000;
-const serverURL = env["SERVER_URL"] || 'https://take-unique-turn-deno.onrender.com/';
+const serverURL = env["SERVER_URL"] || '';
+const dbCollection = env["MONGO_DB_COLLECTION"] || '';
+const dbServer = env["MONGO_DB_SERVER_URL"] || '';
+const dbUser = env["MONGO_DB_USER"] || '';
+const dbPassword = env["MONGO_DB_PASSWORD"] || '';
+
+console.log(`port:${port}, serverURL:${serverURL}, dbCollection:${dbCollection}, dbServer:${dbServer}, dbUser:${dbUser}, dbPassword:${dbPassword}`);
+
+// server
 
 const app = new Application({ logErrors: false });
 const router = new Router();
