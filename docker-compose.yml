@@ -9,7 +9,7 @@ services:
     tty: true
     volumes:
       - ./src:/src
-    env_file: local_env/.env
+    env_file: src/.env
     stop_grace_period: 1s
     networks:
       - shared
