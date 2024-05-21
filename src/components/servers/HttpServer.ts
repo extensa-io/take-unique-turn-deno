@@ -48,6 +48,12 @@ router.get('/', (ctx) => {
   ctx.response.body = "take-unique-turn-deno API OK";
 });
 
+router.get('/presentation', async (ctx) => {
+  const fileBuffer = await Deno.readFile(`${Deno.cwd()}/assets/FromNodeToDeno.pdf`);
+  ctx.response.body = fileBuffer;
+  ctx.response.headers.set('Content-Type', 'application/pdf');
+});
+
 router.get('/all', async (ctx) => {
   ctx.response.body = await service.getTurns();
 });
