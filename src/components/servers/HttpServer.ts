@@ -45,7 +45,7 @@ router.get("/wss", (ctx) => {
 
 // routes
 router.get('/', (ctx) => {
-  ctx.response.body = "take-unique-api API OK";
+  ctx.response.body = "take-unique-turn-deno API OK";
 });
 
 router.get('/all', async (ctx) => {
