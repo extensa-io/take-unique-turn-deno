@@ -4,17 +4,15 @@ import { Application, Context, isHttpError, Router } from "https://deno.land/x/o
 import { TurnService } from "../../shared/services/TurnService.ts";
 import { Message, MessageType } from "../../shared/Types.ts";
 
-const env = await load();
-
 const service = new TurnService();
 
 // env variables
-const port =  Number(env["PORT"]) || 8000;
-const serverURL = env["SERVER_URL"] || '';
-const dbCollection = env["MONGO_DB_COLLECTION"] || '';
-const dbServer = env["MONGO_DB_SERVER_URL"] || '';
-const dbUser = env["MONGO_DB_USER"] || '';
-const dbPassword = env["MONGO_DB_PASSWORD"] || '';
+const port =  Number(Deno.env.get("PORT")) || 8000;
+const serverURL = Deno.env.get("SERVER_URL") || '';
+const dbCollection = Deno.env.get("MONGO_DB_COLLECTION") || '';
+const dbServer = Deno.env.get("MONGO_DB_SERVER_URL") || '';
+const dbUser = Deno.env.get("MONGO_DB_USER") || '';
+const dbPassword = Deno.env.get("MONGO_DB_PASSWORD") || '';
 
 console.log(`port:${port}, serverURL:${serverURL}, dbCollection:${dbCollection}, dbServer:${dbServer}, dbUser:${dbUser}, dbPassword:${dbPassword}`);
 
