@@ -52,6 +52,14 @@ router.get('/all', async (ctx) => {
   ctx.response.body = await service.getTurns();
 });
 
+router.get('/assign/:id', async (ctx) => {
+    const turnID = ctx.params.id;
+    await service.reserveTurn(turnID)
+    await createAndEmit(ctx);
+
+    ctx.response.redirect(`/assign.html?id=${turnID}`);
+});
+
 router.get('/getTurn/:id', async (ctx) => {
   const userName = 'anonymous';
   const turnId = ctx.params.id;
@@ -81,14 +89,6 @@ router.post('/reset', async (ctx) => {
   await createAndEmit(ctx);
 
   ctx.response.body = `turns cleared, next turn is [${service.nextAvailableTurn}]`;
-});
-
-router.get('/assign/:id', async (ctx) => {
-    const turnID = ctx.params.id;
-    await service.reserveTurn(turnID)
-    await createAndEmit(ctx);
-
-    ctx.response.redirect(`/assign.html?id=${turnID}`);
 });
 
 // Error handler
@@ -133,8 +133,8 @@ app.addEventListener("listen", ({ port }) => {
 await app.listen({ port });
 
 // miscellaneous
-function createAndEmit(ctx: Context): void {
-  service.createNextTurn();
+async function createAndEmit(ctx: Context): Promise<void> {
+  await service.createNextTurn();
 
   const message = buildMessage();
   console.log(`emitting message for turn [${message.next_available_turn}]`);
