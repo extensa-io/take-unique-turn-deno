@@ -4,10 +4,24 @@ export enum MessageType {
   TURN_URL = 'TURN_URL',
 }
 
+export enum TurnStatus {
+  ASSIGNED = 'ASSIGNED',
+  AVAILABLE = 'AVAILABLE',
+  RESERVED = 'RESERVED',
+}
+
+export interface DBSettings {
+  dbCollection: string;
+  dbServer: string;
+  dbUser: string;
+  dbPassword: string;
+}
+
 export interface TurnDetails {
+  turn_id?: string;
   turn: number;
   user_name: string;
-  assigned: boolean;
+  status: TurnStatus;
 }
 
 export interface Turn {

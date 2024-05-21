@@ -1,20 +1,24 @@
-import { load } from "https://deno.land/std@0.224.0/dotenv/mod.ts";
 import { Application, Context, isHttpError, Router } from "https://deno.land/x/oak@v16.0.0/mod.ts";
 
 import { TurnService } from "../../shared/services/TurnService.ts";
-import { Message, MessageType } from "../../shared/Types.ts";
-
-const service = new TurnService();
+import { DBSettings, Message } from "../../shared/Types.ts";
+import { TurnRepository } from "../../shared/repositories/TurnRepository.ts";
 
 // env variables
 const port =  Number(Deno.env.get("PORT")) || 8000;
 const serverURL = Deno.env.get("SERVER_URL") || '';
-const dbCollection = Deno.env.get("MONGO_DB_COLLECTION") || '';
-const dbServer = Deno.env.get("MONGO_DB_SERVER_URL") || '';
-const dbUser = Deno.env.get("MONGO_DB_USER") || '';
-const dbPassword = Deno.env.get("MONGO_DB_PASSWORD") || '';
+const dbSettings: DBSettings = {
+  dbCollection: Deno.env.get("MONGO_DB_COLLECTION") || '',
+  dbServer: Deno.env.get("MONGO_DB_SERVER_URL") || '',
+  dbUser: Deno.env.get("MONGO_DB_USER") || '',
+  dbPassword: Deno.env.get("MONGO_DB_PASSWORD")  || '',
+};
 
-console.log(`port:${port}, serverURL:${serverURL}, dbCollection:${dbCollection}, dbServer:${dbServer}, dbUser:${dbUser}, dbPassword:${dbPassword}`);
+// components
+const repository = new TurnRepository();
+await repository.connect(dbSettings);
+const service = new TurnService(repository);
+await service.createNextTurn();
 
 // server
 
@@ -44,15 +48,20 @@ router.get('/', (ctx) => {
   ctx.response.body = "take-unique-api API OK";
 });
 
-router.get('/getTurn/:id', (ctx) => {
-  const userName = 'anonymous';
-  const assignedTurn = service.assignTurn(ctx.params.id, userName);
+router.get('/all', async (ctx) => {
+  ctx.response.body = await service.getTurns();
+});
 
-  ctx.response.redirect(`/thanks.html?name=${userName}&turn=${assignedTurn}`);
+router.get('/getTurn/:id', async (ctx) => {
+  const userName = 'anonymous';
+  const turnId = ctx.params.id;
+  const assignedTurn = await service.assignTurn(turnId, userName);
+
+  ctx.response.redirect(`/thanks.html?name=${assignedTurn.user_name}&turn=${assignedTurn.turn}`);
 });
 
 router.post('/getTurn/:id', async (ctx) => {
-    const id = ctx.params.id;
+    const turnId = ctx.params.id;
     const body = await ctx.request.body.form();
     
     let userName = 'anonymous'
@@ -62,16 +71,24 @@ router.post('/getTurn/:id', async (ctx) => {
       }
     }
   
-    const assignedTurn = service.assignTurn(id, userName);
-  
-    ctx.response.redirect(`/thanks.html?name=${userName}&turn=${assignedTurn}`);
+    const assignedTurn = await service.assignTurn(turnId, userName);
+
+    ctx.response.redirect(`/thanks.html?name=${assignedTurn.user_name}&turn=${assignedTurn.turn}`);
 });
 
-router.get('/assign/:id', (ctx) => {
-    const id = ctx.params.id;
-    createAndEmit(ctx);
+router.post('/reset', async (ctx) => {
+  await service.resetDB();
+  await createAndEmit(ctx);
 
-    ctx.response.redirect(`/assign.html?id=${id}`);
+  ctx.response.body = `turns cleared, next turn is [${service.nextAvailableTurn}]`;
+});
+
+router.get('/assign/:id', async (ctx) => {
+    const turnID = ctx.params.id;
+    await service.reserveTurn(turnID)
+    await createAndEmit(ctx);
+
+    ctx.response.redirect(`/assign.html?id=${turnID}`);
 });
 
 // Error handler
@@ -119,8 +136,11 @@ await app.listen({ port });
 function createAndEmit(ctx: Context): void {
   service.createNextTurn();
 
+  const message = buildMessage();
+  console.log(`emitting message for turn [${message.next_available_turn}]`);
+
   for (const ws of connectedClients.values()) {
-    ws.send(JSON.stringify(buildMessage()));
+    ws.send(JSON.stringify(message));
   }
 }
 

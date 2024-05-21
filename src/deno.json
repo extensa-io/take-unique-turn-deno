@@ -1,7 +1,7 @@
 {
   "tasks": {
     "dev": "deno run -A --watch components/servers/HttpServer.ts",
-    "start": "deno run --allow-net --allow-read --allow-env ./components/servers/HttpServer.ts"
+    "start": "deno run --allow-net --allow-read --allow-env --allow-sys ./components/servers/HttpServer.ts"
   },  
   "lint": {
     "rules": {
